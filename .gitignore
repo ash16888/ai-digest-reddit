@@ -1,0 +1,136 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Package managers
+pip-log.txt
+pip-delete-this-directory.txt
+Pipfile.lock
+poetry.lock
+.pdm.toml
+__pypackages__/
+
+# Testing
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Environments
+.env
+.env.*
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Virtual environments
+.python-version
+
+# Jupyter
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# IDEs
+.idea/
+.vscode/
+.spyderproject
+.spyproject
+.ropeproject
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Project specific
+data/*.json
+reports/
+!data/.gitkeep
+!reports/.gitkeep
+
+# AWS Lambda
+*.zip
+
+build_*/
+deployment-package/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfplan
+terraform/terraform.tfvars
+terraform/*.auto.tfvars
+terraform/.terraform.lock.hcl
+terraform/files/*.zip
+
+# Claude Code
+.claude/
+.claudeignore
+.checkpoints

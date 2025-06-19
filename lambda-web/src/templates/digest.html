@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дайджест за {{ formatted_date }} - Reddit AI Digest</title>
+    <meta name="description" content="Дайджест лучших постов об AI из Reddit за {{ formatted_date }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+    <div class="site-wrapper">
+        <header class="site-header compact">
+            <div class="header-top">
+                <div class="container">
+                    <div class="header-controls">
+                        <nav class="breadcrumb-nav">
+                            <a href="/" class="breadcrumb-link">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12h18m-18 0l6-6m-6 6l6 6"/>
+                                </svg>
+                                Все дайджесты
+                            </a>
+                        </nav>
+                        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">
+                            <span id="theme-icon">🌙</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="article-progress" id="reading-progress"></div>
+
+        <main class="article-main">
+            <div class="container">
+                <article class="article-container">
+                    <header class="article-header">
+                        <div class="article-meta-top">
+                            <time class="article-date">{{ formatted_date }}</time>
+                            <span class="reading-time" id="reading-time">• 5 мин чтения</span>
+                        </div>
+                        <h1 class="article-title">Дайджест Reddit • {{ formatted_date }}</h1>
+                        <div class="article-stats">
+                            {% if stats %}
+                            <div class="stat-badge">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2zM8 10h8M8 14h5"/>
+                                </svg>
+                                {{ stats.total_posts }} постов
+                            </div>
+                            <div class="stat-badge">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+                                </svg>
+                                {{ stats.trends }} трендов
+                            </div>
+                            {% endif %}
+                        </div>
+                    </header>
+
+                    <!-- Stats Section -->
+                    {% if digest_stats %}
+                    <section class="stats-bar">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ digest_stats.total_posts|number_format }}</div>
+                            <div class="stat-label">постов обработано</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ digest_stats.filtered_posts }}</div>
+                            <div class="stat-label">постов отфильтровано</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ digest_stats.subreddit_counts|length }}</div>
+                            <div class="stat-label">сабреддитов</div>
+                        </div>
+                    </section>
+                    {% endif %}
+
+                    <nav class="article-nav">
+                        <div class="nav-container">
+                            {% if prev_digest %}
+                            <a href="/digest/{{ prev_digest.date }}" class="nav-item nav-prev">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 18l-6-6 6-6"/>
+                                </svg>
+                                <div class="nav-content">
+                                    <span class="nav-label">Предыдущий</span>
+                                    <span class="nav-date">{{ prev_digest.formatted_date }}</span>
+                                </div>
+                            </a>
+                            {% else %}
+                            <div class="nav-item nav-disabled">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M15 18l-6-6 6-6"/>
+                                </svg>
+                                <div class="nav-content">
+                                    <span class="nav-label">Предыдущий</span>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if next_digest %}
+                            <a href="/digest/{{ next_digest.date }}" class="nav-item nav-next">
+                                <div class="nav-content">
+                                    <span class="nav-label">Следующий</span>
+                                    <span class="nav-date">{{ next_digest.formatted_date }}</span>
+                                </div>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </a>
+                            {% else %}
+                            <div class="nav-item nav-disabled">
+                                <div class="nav-content">
+                                    <span class="nav-label">Следующий</span>
+                                </div>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </nav>
+
+                    <div class="article-content">
+                        {{ content | safe }}
+                    </div>
+
+                    <div class="article-actions">
+                        <button class="share-button" onclick="shareDigest()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M8.59 13.51l6.83 3.98m-.01-10.98l-6.82 3.98M21 5a3 3 0 11-6 0 3 3 0 016 0zM9 12a3 3 0 11-6 0 3 3 0 016 0zm12 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            Поделиться
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Similar Articles Section -->
+                <section class="related-articles">
+                    <h3 class="section-title">Другие выпуски</h3>
+                    <div class="related-grid">
+                        {% if prev_digest %}
+                        <article class="related-card">
+                            <time>{{ prev_digest.formatted_date }}</time>
+                            <h4><a href="/digest/{{ prev_digest.date }}">{{ prev_digest.title }}</a></h4>
+                        </article>
+                        {% endif %}
+                        {% if next_digest %}
+                        <article class="related-card">
+                            <time>{{ next_digest.formatted_date }}</time>
+                            <h4><a href="/digest/{{ next_digest.date }}">{{ next_digest.title }}</a></h4>
+                        </article>
+                        {% endif %}
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Reddit AI Digest</h4>
+                        <p class="footer-description">Ежедневная подборка лучших постов об искусственном интеллекте из популярных сабреддитов.</p>
+                        <div class="footer-actions">
+                            <a href="/" class="button-secondary">Все дайджесты</a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Сабреддиты</h4>
+                        <ul class="footer-links">
+                            <li><a href="https://reddit.com/r/ChatGPT" target="_blank" rel="noopener">r/ChatGPT</a></li>
+                            <li><a href="https://reddit.com/r/OpenAI" target="_blank" rel="noopener">r/OpenAI</a></li>
+                            <li><a href="https://reddit.com/r/ClaudeAI" target="_blank" rel="noopener">r/ClaudeAI</a></li>
+                            <li><a href="https://reddit.com/r/Bard" target="_blank" rel="noopener">r/Bard</a></li>
+                            <li><a href="https://reddit.com/r/GeminiAI" target="_blank" rel="noopener">r/GeminiAI</a></li>
+                            <li><a href="https://reddit.com/r/DeepSeek" target="_blank" rel="noopener">r/DeepSeek</a></li>
+                            <li><a href="https://reddit.com/r/grok" target="_blank" rel="noopener">r/grok</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Проект</h4>
+                        <ul class="footer-links">
+                            <li><a href="/about">О проекте</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Reddit AI Digest</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Theme switching functionality with animation
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = body.getAttribute('data-theme');
+
+            // Animate icon rotation
+            themeIcon.style.transform = 'rotate(90deg)';
+            themeIcon.style.opacity = '0';
+
+            setTimeout(() => {
+                if (currentTheme === 'dark') {
+                    body.removeAttribute('data-theme');
+                    themeIcon.textContent = '🌙';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    themeIcon.textContent = '☀️';
+                    localStorage.setItem('theme', 'dark');
+                }
+
+                // Restore icon
+                themeIcon.style.transform = 'rotate(0deg)';
+                themeIcon.style.opacity = '1';
+            }, 300);
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('theme-icon');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        // Reading progress indicator
+        function updateReadingProgress() {
+            const article = document.querySelector('.article-content');
+            const progressBar = document.getElementById('reading-progress');
+
+            if (article && progressBar) {
+                const articleTop = article.offsetTop;
+                const articleHeight = article.offsetHeight;
+                const windowHeight = window.innerHeight;
+                const scrolled = window.pageYOffset;
+
+                const progress = Math.max(0, Math.min(100,
+                    ((scrolled - articleTop + windowHeight) / articleHeight) * 100
+                ));
+
+                progressBar.style.width = progress + '%';
+            }
+        }
+
+        // Calculate reading time
+        function calculateReadingTime() {
+            const content = document.querySelector('.article-content');
+            const readingTimeElement = document.getElementById('reading-time');
+
+            if (content && readingTimeElement) {
+                const text = content.textContent || content.innerText;
+                const wordsPerMinute = 200;
+                const words = text.trim().split(/\s+/).length;
+                const minutes = Math.ceil(words / wordsPerMinute);
+
+                readingTimeElement.textContent = `• ${minutes} мин чтения`;
+            }
+        }
+
+        // Share functionality
+        function shareDigest() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Ссылка скопирована в буфер обмена');
+                }).catch(console.error);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            calculateReadingTime();
+            updateReadingProgress();
+        });
+
+        // Update reading progress on scroll
+        window.addEventListener('scroll', updateReadingProgress);
+        window.addEventListener('resize', updateReadingProgress);
+    </script>
+</body>
+</html>

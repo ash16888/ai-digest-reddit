@@ -1,0 +1,38 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.auto.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Plan files
+*.tfplan
+plan.out
+
+# Lambda deployment packages
+files/*.zip
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Backup files
+*.backup
+
+# Sensitive files
+*.pem
+*.key
+secrets.tf

@@ -1,0 +1,52 @@
+# Пример файла с переменными для Reddit AI Digest
+# 
+# Инструкция:
+# 1. Скопируйте этот файл в terraform.tfvars
+# 2. Заполните все переменные вашими значениями
+# 3. НЕ коммитьте terraform.tfvars в git (он уже в .gitignore)
+
+# Основные настройки
+environment = "prod"
+aws_region  = "eu-central-1"
+
+# Reddit API учетные данные
+# Получите на https://www.reddit.com/prefs/apps
+reddit_client_id     = "YOUR_REDDIT_CLIENT_ID"
+reddit_client_secret = "YOUR_REDDIT_CLIENT_SECRET"
+reddit_user_agent    = "reddit-digest-lambda/1.0"
+
+# Список Reddit сабреддитов для мониторинга
+# Можете добавить или удалить сабреддиты по необходимости
+reddit_subreddits = [
+  "ChatGPT",
+  "OpenAI", 
+  "ClaudeAI",
+  "Bard",
+  "GeminiAI",
+  "DeepSeek",
+  "grok"
+]
+
+# OpenAI API ключ
+# Получите на https://platform.openai.com/api-keys
+openai_api_key = "YOUR_OPENAI_API_KEY"
+
+# S3 bucket настройки
+# Оставьте пустым для автоматической генерации имени
+# или укажите существующий bucket
+s3_bucket_name = ""
+
+# Lambda настройки
+lambda_memory_size = 256
+lambda_timeout     = 300
+
+# Расписание запуска (cron expression)
+# По умолчанию: ежедневно в 1:00 UTC
+cron_schedule = "cron(0 1 * * ? *)"
+
+# Мониторинг и алерты
+enable_monitoring = true
+alert_email      = "your-email@example.com"  # Оставьте пустым, если не нужны email алерты
+
+# Хранение логов (дни)
+s3_logs_retention_days = 30
